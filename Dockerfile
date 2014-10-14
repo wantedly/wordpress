@@ -8,6 +8,7 @@ RUN apt-get update && apt-get install -y \
 		php5-gd \
 		php5-mysql \
 		rsync \
+		unzip \
 		wget \
 	&& rm -rf /var/lib/apt/lists/*
 RUN a2enmod rewrite
@@ -41,6 +42,11 @@ ENV WORDPRESS_UPSTREAM_VERSION 4.0
 
 # upstream tarballs include ./wordpress/ so this gives us /usr/src/wordpress
 RUN curl -SL http://wordpress.org/wordpress-${WORDPRESS_UPSTREAM_VERSION}.tar.gz | tar -xzC /usr/src/
+
+ENV ITHEMES_SECURITY_VERSION 4.4.18
+RUN curl -O https://downloads.wordpress.org/plugin/better-wp-security.${ITHEMES_SECURITY_VERSION}.zip && \
+    unzip better-wp-security.${ITHEMES_SECURITY_VERSION}.zip -d /usr/src/wordpress/wp-content/plugins && \
+    rm better-wp-security.${ITHEMES_SECURITY_VERSION}.zip
 
 COPY docker-apache.conf /etc/apache2/sites-available/wordpress
 RUN a2dissite 000-default && a2ensite wordpress
