@@ -111,6 +111,12 @@ if (!$mysql->query('CREATE DATABASE IF NOT EXISTS `' . $mysql->real_escape_strin
 	exit(1);
 }
 
+if (!$mysql->query('GRANT select,insert,update,delete on `' . $mysql->real_escape_string($argv[4]) . '`.* TO `' . $mysql->real_escape_string($argv[2]) . '`@`' . $host . '`')) {
+	file_put_contents('php://stderr', 'MySQL "GRANT" Error: ' . $mysql->error . "\n");
+	$mysql->close();
+	exit(1);
+}
+
 $mysql->close();
 EOPHP
 
